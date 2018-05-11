@@ -168,11 +168,21 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, bool useCalibrated=
     cameraMatrix[1] = Mat::eye(3, 3, CV_64F);
     Mat R, T, E, F;
 
+    vector<Mat> rvecs_0, tvecs_0;
+    vector<Mat> rvecs_1, tvecs_1;
+    double rms_0 = calibrateCamera(objectPoints, imagePoints[0], imageSize,
+                    cameraMatrix[0], distCoeffs[0], rvecs_0, tvecs_0, CV_CALIB_FIX_K3);
+    double rms_1 = calibrateCamera(objectPoints, imagePoints[1], imageSize,
+                    cameraMatrix[1], distCoeffs[1], rvecs_1, tvecs_1, CV_CALIB_FIX_K3);
+    cout << "done with camera_0 RMS error = " << rms_0 << endl;
+    cout << "done with camera_1 RMS error = " << rms_1 << endl;
+
     double rms = stereoCalibrate(objectPoints, imagePoints[0], imagePoints[1],
                     cameraMatrix[0], distCoeffs[0],
                     cameraMatrix[1], distCoeffs[1],
                     imageSize, R, T, E, F,
                     TermCriteria(CV_TERMCRIT_ITER+CV_TERMCRIT_EPS, 100, 1e-5),
+                    CV_CALIB_USE_INTRINSIC_GUESS +
                     CV_CALIB_FIX_ASPECT_RATIO +
                     CV_CALIB_ZERO_TANGENT_DIST +
                     CV_CALIB_SAME_FOCAL_LENGTH +
@@ -350,7 +360,7 @@ int main(int argc, char** argv)
 
     for( int i = 1; i < argc; i++ )
     {
-        if ( string(argv[i]) == "-h" )
+        if ( string(argv[i]) == "--help" )
             return print_help();
         else if( string(argv[i]) == "-w" )
         {
