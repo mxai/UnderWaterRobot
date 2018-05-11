@@ -330,38 +330,42 @@ int main(int argc, char** argv)
         reprojectImageTo3D(disp, xyz, Q, true);
 
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr point_cloud_ptr (new pcl::PointCloud<pcl::PointXYZRGB>);
-        point_cloud_ptr->resize(xyz.rows * xyz.cols);
 
         uchar pr, pg, pb;
         cout << "xyz rows = " << xyz.rows << ", cols = " << xyz.cols << endl;
+        cout << "xyz channels = " << xyz.channels() << endl;
+
         for (int i=0; i < xyz.rows; i++)
         {
             for (int j=0; j < xyz.cols; j++)
             {
-                //cout << "i = " << i << endl;
-                Point3f pointOcv = xyz.at<Point3f>(j, i);
+                Point3f pointOcv = xyz.at<Point3f>(i, j);
+                if(pointOcv.z > 10)
+                    continue;
+
+                //cout << "pointOcv.x = " << pointOcv.x << ", pointOcv.y = " << pointOcv.y << ", pointOcv.z = " << pointOcv.z << endl;
 
                 pcl::PointXYZRGB p;
-
                 p.x = pointOcv.x;
                 p.y = pointOcv.y;
                 p.z = pointOcv.z;
 
-/*
+
                 uchar* rgb_ptr = xyz.ptr<uchar>(i);
                 pb = rgb_ptr[3*j];
                 pg = rgb_ptr[3*j+1];
                 pr = rgb_ptr[3*j+2];
                 uint32_t rgb = (static_cast<uint32_t>(pr) << 16 | static_cast<uint32_t>(pg) << 8 | static_cast<uint32_t>(pb));
                 p.rgb = *reinterpret_cast<float*>(&rgb);
-*/
+
                 point_cloud_ptr->points.push_back(p);
             }
         }
 
         pcl::visualization::PCLVisualizer pclViewer("pcl cloud viewer");
     	pclViewer.addPointCloud(point_cloud_ptr);
-    	pclViewer.addCoordinateSystem(1.0);
+    	pclViewer.addCoordinateSystem(0.1);
+        pclViewer.setBackgroundColor(255, 255, 255);
 
         while(!pclViewer.wasStopped())
         {
