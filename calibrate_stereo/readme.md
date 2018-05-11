@@ -40,3 +40,11 @@ $ ./stereo_match ../20110101/1-01.jpg ../20110101/2-01.jpg -i intrinsics.yml -e 
 > 这两个程序均来自opencv的例子程序
 
 > 两个程序更多参数均可以通过-h查看
+
+# 代码更新和编译
+```
+$ git pull
+$ cd build & rm -rf *
+$ cmake ..
+$ make
+```
