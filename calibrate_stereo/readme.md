@@ -3,6 +3,10 @@
 1. stereo_calib.cpp 主要是实现了双目标定，stereo_calib.xml给出了用于标定的图像集合，标定结束后会产生 extrinsics.yml 和 intrinsics.yml
 2. stereo_match.cpp 主要功能是输入左右目图像，显示视差图和对应点云
 
+# 依赖库
+1. OpenCV 2.4
+2. PCL
+
 # 编译和运行
 ## 编译
 如果没有build文件夹，则：
