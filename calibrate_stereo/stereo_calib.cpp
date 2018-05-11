@@ -350,7 +350,9 @@ int main(int argc, char** argv)
 
     for( int i = 1; i < argc; i++ )
     {
-        if( string(argv[i]) == "-w" )
+        if ( string(argv[i]) == "-h" )
+            return print_help();
+        else if( string(argv[i]) == "-w" )
         {
             if( sscanf(argv[++i], "%d", &boardSize.width) != 1 || boardSize.width <= 0 )
             {
